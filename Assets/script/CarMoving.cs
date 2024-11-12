@@ -8,12 +8,16 @@ public class CarMoving : MonoBehaviour
     private float maxSpeed = 120f;
     private float acceleration = 20f; // ускорение
     private float deceleration = 10f; // торможение
-    private float maxreverseSpeed = -15f; 
+    private float maxreverseSpeed = -15f;
     private float rotationSpeed = 100f; // int тип данных с целыми числами, float тип данных с дробной частью
     public float vertical;
-    public float horizontal; 
-    void Start()
+    public float horizontal;
+    public Vector3 startposition;
+    public Quaternion startrotation;
+    void Start() 
     {
+        startposition = transform.position;
+        startrotation = transform.rotation;
         Debug.Log("welcome to my sity");
     }
 
@@ -24,9 +28,13 @@ public class CarMoving : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
         horizontal = Input.GetAxis("Horizontal");
 
-        transform.Translate(Vector3.forward * speed * Time.deltaTime*vertical);
-        transform.Rotate(Vector3.up*rotationSpeed*Time.deltaTime*horizontal);
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * vertical);
+        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime * horizontal);
 
+        if (Outoffbounds())
+        {
+            Resettostartposition();
+        }
         // transform.position += new Vector3(0, 0, 1) * Time.deltaTime * speed;
         //if (Input.GetKey(KeyCode.W))
         //{
@@ -36,5 +44,21 @@ public class CarMoving : MonoBehaviour
         //{
         //    transform.Translate(Vector3.back * speed * Time.deltaTime);
         //}
+    }
+
+    bool Outoffbounds()
+    {
+        if (transform.position.y < -2 || transform.position.y > 20)
+        { return true; }
+        else
+        {
+            return false;
+        }
+    }
+    public void Resettostartposition()
+    {
+        transform.position = startposition;
+        transform.rotation = startrotation;
+            
     }
 }
